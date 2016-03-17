@@ -46,3 +46,43 @@ The requests are logged in the apache access log under (per /etc/apache2/apache2
 
 Using the access log we measure the request per seconds or minutes.
 
+Lets see how we can measure the request per minutes
+
+We first filter the access log with the requests we wish to measure. e.g. if our app is /load.php we will filter that app call.
+
+grep load.php /var/log/apache2/access.log
+
+Then we clean the file so only the response time and the time the request was served remains
+
+grep load.php /var/log/apache2/access.log|awk '{print $10,$4}'
+
+Aapache prints the character [ before the date. This can be modified in the log format configuration but we will remove it for now by adding sed 's/\[//g'.
+
+grep load.php /var/log/apache2/access.log|awk '{print $10,$4}' |sed 's/\[//g'
+
+Now we are ready for the request per minutes calculation. We will use simple bucket sort and use awk arrays. To do it we need to create the bucket keys. We wish to create a single bucket for each minutes so we will concatenate the fields that form a miunte. i.e.,
+
+17/Mar/2016 16:43 
+
+with the awk statment:
+
+awk -F\: '{print $1"_"$2"_"$3}'
+
+So far we have:
+
+grep load.php /var/log/apache2/access.log|awk '{print $10,$4}' |sed 's/\[//g' | awk -F\: '{print $1"_"$2"_"$3}'
+
+Now we are ready to popluate the minutes buckets (marked as arr)
+
+grep load.php /var/log/apache2/access.log|awk '{print $10,$4}' |sed 's/\[//g' | awk -F\: '{print $1"_"$2"_"$3}' | awk '{arr[$2]+=$1}END{for(i in arr) print i,arr[i]/60}'
+
+Finally we print the results for each minutes with the amount of served requests. e.g.,
+
+17/Mar/2016_17_24 37.75
+
+17/Mar/2016_17_25 35.2333
+
+17/Mar/2016_17_26 35.2333
+
+
+
