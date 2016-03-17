@@ -1,6 +1,6 @@
 # loader-engima
 This repo will include loader components for both offline and online workloads.
-The offline will sort based. We will generate a radnom file and ask a server component (using PHP) to sort it. 
+The offline will sort based. We will generate a randnom file and ask a server component (using PHP) to sort it. 
 The random file will be based on the baseline we agree on. e.g.,  
 
 dd if=/dev/urandom of=1.log bs=5M count=2
@@ -9,7 +9,7 @@ Please note that the size of bs is determined by the VALUE the system needs to y
 
 The server will load the generated file 1.log and sort it. 
 
-Our loader system will deploy the files across the compute system and log the processsing time.
+Our loader system will deploy the files across the compute system and log the processing time.
 
 Assuming we run Apache2 with Documentroot at /var/www/html, we are going to copy the load.php to /var/www/html
 
@@ -32,11 +32,11 @@ While we run it for couple of minutes we will observe ONE server only for genera
 
 tail -f /var/log/apache2/error.log
 
-see if the test is valid and no otstanding errors are generated e.g., lack of memory.
+see if the test is valid and no outstanding errors are generated e.g., lack of memory.
 
 Then execute the vmstat command on the SERVER and observe the reosurce utilization i.e. memory, swap, io, cpu etc. 
 
-Once the server is in optimal utilization i.e. 60-70% utilization of the resources than we strart to measure the results.
+Once the server is in optimal utilization i.e. 60-70% utilization of the reosurce than we start to measure the results.
 
 Again, the results refers to VALUE we got from the system. The VALUE refers to the system utility i.e. user request per second.
 
@@ -64,7 +64,7 @@ Now we are ready for the request per minutes calculation. We will use simple buc
 
 17/Mar/2016 16:43 
 
-with the awk statment:
+with the awk statement:
 
 awk -F\: '{print $1"_"$2"_"$3}'
 
